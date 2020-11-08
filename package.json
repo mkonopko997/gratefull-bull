@@ -20,9 +20,13 @@
   },
   "homepage": "https://github.com/mkonopko997/grateful-bull#readme",
   "dependencies": {
+    "@slack/events-api": "^2.3.4",
     "@slack/rtm-api": "^5.0.5",
     "@slack/web-api": "^5.12.0",
     "esm": "^3.2.25",
     "slackbots": "^1.2.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.1.2"
   }
 }
