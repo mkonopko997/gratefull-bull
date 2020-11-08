@@ -1,0 +1,28 @@
+{
+  "name": "grateful-bull",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "run": "node -r esm src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mkonopko997/grateful-bull.git"
+  },
+  "keywords": [
+    "grateful",
+    "bull"
+  ],
+  "author": "Michal Konopko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mkonopko997/grateful-bull/issues"
+  },
+  "homepage": "https://github.com/mkonopko997/grateful-bull#readme",
+  "dependencies": {
+    "@slack/rtm-api": "^5.0.5",
+    "@slack/web-api": "^5.12.0",
+    "esm": "^3.2.25",
+    "slackbots": "^1.2.0"
+  }
+}
