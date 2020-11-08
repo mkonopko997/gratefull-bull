@@ -1,5 +1,8 @@
 import { SLACK_OAUTH_TOKEN, PORT } from "./constans";
-import { checkIfLedgerIsCreatedAndCreateIfNot } from "./slackMethods";
+import {
+  checkIfLedgerIsCreatedAndCreateIfNot,
+  saveGratification,
+} from "./slackMethods";
 import { createEventAdapter } from "@slack/events-api";
 
 const slackEvents = createEventAdapter(SLACK_OAUTH_TOKEN);
@@ -14,7 +17,8 @@ const slackEvents = createEventAdapter(SLACK_OAUTH_TOKEN);
   }
 })();
 
-slackEvents.on("app_mention", (event) => {
+slackEvents.on("app_mention", async (event) => {
+  await saveGratification(event);
   console.log(event);
 });
 
