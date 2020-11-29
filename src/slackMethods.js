@@ -51,7 +51,7 @@ function getCommand(event) {
   return event.text.split(" ")[1];
 }
 
-export async function command(event) {
+export async function channelCommand(event) {
   const command = getCommand(event);
   if (command === "rating") {
     await sendMessage(event.channel, "RATING");
@@ -62,6 +62,22 @@ export async function command(event) {
   if (isUser(command)) {
     await saveGratification(event);
   }
+}
+
+export async function directMessageCommand(event) {
+  console.log("directmessage");
+  console.log(event);
+  const res = await web.conversations.list({ types: "im" });
+  // const res = await web.conversations.members({ channel: event.channel });
+  console.log(res);
+}
+
+export async function getReceiver(event) {
+  console.log("directmessage");
+  console.log(event);
+  const res = await web.conversations.list({ types: "im" });
+  // const res = await web.conversations.members({ channel: event.channel });
+  console.log(res);
 }
 
 export async function getMessages(daysToNow) {
