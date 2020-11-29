@@ -1,16 +1,13 @@
-import { SLACK_OAUTH_TOKEN, PORT } from "./constans";
-import {
-  checkIfLedgerIsCreatedAndCreateIfNot,
-  saveGratification,
-} from "./slackMethods";
+import { PORT } from "./constans";
+import { checkIfLedgerIsCreatedAndCreateIfNot, command } from "./slackMethods";
 import { createEventAdapter } from "@slack/events-api";
+import { SLACK_OAUTH_TOKEN } from "./slackToken";
 
 const slackEvents = createEventAdapter(SLACK_OAUTH_TOKEN);
 
 (async () => {
   try {
-    const server = await slackEvents.start(PORT);
-    console.log(`Listening for events on ${server.address().port}`);
+    await slackEvents.start(PORT);
     await checkIfLedgerIsCreatedAndCreateIfNot();
   } catch (e) {
     console.log(e);
@@ -18,10 +15,6 @@ const slackEvents = createEventAdapter(SLACK_OAUTH_TOKEN);
 })();
 
 slackEvents.on("app_mention", async (event) => {
-  await saveGratification(event);
-  console.log(event);
-});
-
-slackEvents.on("channel_created", (event) => {
+  await command(event);
   console.log(event);
 });
