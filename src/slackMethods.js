@@ -54,8 +54,7 @@ function getCommand(event) {
 export async function channelCommand(event) {
   const command = getCommand(event);
   if (command === "rating") {
-    await sendMessage(event.channel, "RATING");
-    await getMessages(5);
+    await sendMessage(event.channel, await getRatingMessage());
     return;
   }
 
@@ -76,11 +75,39 @@ export async function getReceiver(event) {
   console.log("directmessage");
   console.log(event);
   const res = await web.conversations.list({ types: "im" });
-  // const res = await web.conversations.members({ channel: event.channel });
   console.log(res);
 }
 
-export async function getMessages(daysToNow) {
-  const messages = await web.conversations.history({ channel: LEDGER_NAME });
-  console.log(messages);
+export async function getMessages() {
+  const conversations = await web.conversations.list();
+  const ledger = conversations.channels.find((el) => el.name === LEDGER_NAME);
+  const date = new Date();
+  date.setMonth(date.getMonth() - 1);
+  const history = await web.conversations.history({
+    channel: ledger.id,
+    oldest: date.getTime() / 1000,
+  });
+  return history.messages;
+}
+
+const isMessageATransaction = (message) => {
+  const parts = message.text.split(" ");
+  return isUser(parts[0]) && isUser(parts[1]);
+};
+
+async function getTransactions() {
+  const messages = await getMessages();
+  const transactions = messages.filter(isMessageATransaction);
+  return transactions.reduce((prev, next) => {
+    const receiver = next.text.split(" ")[1];
+    prev[receiver] = prev[receiver] + 1 || 0;
+    return prev;
+  }, {});
+}
+
+async function getRatingMessage() {
+  const transactions = await getTransactions();
+  return Object.keys(transactions)
+    .sort((a, b) => transactions[b] - transactions[a])
+    .reduce((prev, next) => `${prev}${next}: ${transactions[next]} \n`, "");
 }

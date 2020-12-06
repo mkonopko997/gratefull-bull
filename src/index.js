@@ -20,10 +20,11 @@ const slackEvents = createEventAdapter(SLACK_OAUTH_TOKEN);
 })();
 
 slackEvents.on("app_mention", async (event) => {
+  console.log("app_mention");
   await channelCommand(event);
-  console.log(event);
 });
 
 slackEvents.on("message", async (event) => {
+  console.log("direct message");
   await directMessageCommand(event);
 });
