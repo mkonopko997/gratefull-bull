@@ -43,8 +43,14 @@ async function isLedgerCreated() {
   return res.channels.some((el) => el.name === LEDGER_NAME);
 }
 
+const USER_PATTERN = /(<@\w+>)/;
+
 function isUser(userText) {
-  return /(<@\w+>)/.test(userText);
+  return USER_PATTERN.test(userText);
+}
+
+function getUser(userText) {
+  return USER_PATTERN.exec(userText);
 }
 
 function getCommand(event) {
@@ -64,11 +70,17 @@ export async function channelCommand(event) {
 }
 
 export async function directMessageCommand(event) {
-  console.log("directmessage");
   console.log(event);
-  const res = await web.conversations.list({ types: "im" });
+  await isDirectMessageCommand(event.text);
+  // const res = await web.conversations.list({ types: "im" });
   // const res = await web.conversations.members({ channel: event.channel });
-  console.log(res);
+  // console.log(res);
+}
+
+async function isDirectMessageCommand(command) {
+  const bot = await web.auth.test();
+  const botId = bot.user_id;
+  console.log(getUser(command)[0]);
 }
 
 export async function getReceiver(event) {
