@@ -1,7 +1,7 @@
 import { PORT } from "./constans";
 import {
-  channelCommand,
-  checkIfLedgerIsCreatedAndCreateIfNot,
+  botMentionCommand,
+  createLedgerIfDoesntExist,
   directMessageCommand,
 } from "./slackMethods";
 import { createEventAdapter } from "@slack/events-api";
@@ -13,7 +13,7 @@ const slackEvents = createEventAdapter(SLACK_OAUTH_TOKEN);
   try {
     await slackEvents.start(PORT);
     console.log("started");
-    await checkIfLedgerIsCreatedAndCreateIfNot();
+    await createLedgerIfDoesntExist();
   } catch (e) {
     console.log(e);
   }
@@ -21,7 +21,7 @@ const slackEvents = createEventAdapter(SLACK_OAUTH_TOKEN);
 
 slackEvents.on("app_mention", async (event) => {
   console.log("app_mention");
-  await channelCommand(event);
+  await botMentionCommand(event);
 });
 
 slackEvents.on("message", async (event) => {
